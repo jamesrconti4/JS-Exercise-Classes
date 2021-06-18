@@ -42,8 +42,30 @@ class Airplane {
   */
   
  class Person {
-    
+    constructor(name,age){
+      this.name = name;
+      this.age = age;
+      this.stomach = [];
+    }
+    eat(edible){
+      if(this.stomach.length < 10){
+        this.stomach.push(edible);
+      }
+    }
+    poop(){
+      this.stomach = []
+    }
+    toString(){
+      return `${this.name}, ${this.age}`;
+    }
   }
+  const neo = new Person('Neo', 20);
+  console.log(neo);
+  console.log(neo.eat('pasta'));
+  console.log(neo.stomach);
+  neo.poop();
+  console.log(neo.stomach);
+  console.log(neo.toString());
   
   /*
     TASK 2
@@ -60,9 +82,37 @@ class Airplane {
   */
   
  class Car {
-    
+   constructor(model, milesPerGallon){
+     this.model = model;
+     this.milesPerGallon = milesPerGallon;
+     this.tank = 0;
+     this.odometer = 0;
+   }
+    fill(gallons){
+      this.tank += gallons;
+    }
+    drive(distance){
+      if(this.tank < (distance / this.milesPerGallon)){
+        this.odometer = (this.tank * this.milesPerGallon);
+        this.tank = 0;
+        return `I ran out of fuel at ${this.odometer} miles!`;
+      }
+      else{this.odometer += distance;
+      this.tank -= (distance / this.milesPerGallon);
+      }
+    }
   }
   
+  const miata = new Car('Mazda Miata', 28);
+  console.log(miata);
+  miata.fill(10);
+  console.log(miata.tank);
+  miata.drive(280);
+  console.log(miata.tank);
+
+
+
+
   /*
     TASK 3
       - Write a Lambdasian class.
@@ -76,9 +126,22 @@ class Airplane {
           + {name} and {location} of course come from the instance's own properties.
   */
  class Lambdasian {
-    
+   constructor(attributes){
+     this.name = attributes.name;
+     this.age = attributes.age;
+     this.location = attributes.location;
+   }
+    speak(){
+     return `Hello my name is ${this.name}, I am from ${this.location}`
+    }
   }
-  
+  const james = new Lambdasian({
+    name: 'James',
+    age: 24,
+    location: 'Louisville',
+  });
+  james.speak();
+  console.log(james.speak());
   /*
     TASK 4
       - Write an Instructor class extending Lambdasian.
@@ -93,9 +156,32 @@ class Airplane {
           + `demo` receives a `subject` string as an argument and returns the phrase 'Today we are learning about {subject}' where subject is the param passed in.
           + `grade` receives a `student` object and a `subject` string as arguments and returns '{student.name} receives a perfect score on {subject}'
   */
- class Instructor {
-
+ class Instructor extends Lambdasian {
+   constructor(attributes){
+     super(attributes);
+     this.specialty = attributes.specialty;
+     this.favLanguage = attributes.favLanguage;
+     this.catchPhrase = attributes.catchPhrase;
+   }
+   demo(subject){
+     return `Today we are learning about ${subject}`
+   }
+   grade(student, subject){
+     return `${student.name} receives a perfect score on ${subject}`
+   }
  }
+
+ const karl = new Instructor({
+   name: 'Karl',
+   age: 29,
+   location: 'Trier',
+   specialty: 'React',
+   favLanguage: 'HTML',
+   catchPhrase: 'Workers of the world unite; you have nothing to lose but your chains'
+ })
+console.log(karl.speak());
+console.log(karl.demo('objects'));
+console.log(karl.grade(james, 'Arrays'));
   /*
     TASK 5
       - Write a Student class extending Lambdasian.
@@ -111,9 +197,45 @@ class Airplane {
           + `PRAssignment` a method that receives a subject as an argument and returns `student.name has submitted a PR for {subject}`
           + `sprintChallenge` similar to PRAssignment but returns `student.name has begun sprint challenge on {subject}`
   */
- class Student {
-     
+ class Student  extends Lambdasian {
+   constructor(attributes){
+     super(attributes);
+     this.previousBackground = attributes.previousBackground;
+     this.className = attributes.className;
+     this.favSubjects = attributes.favSubjects;
+   }
+   listSubjects() {
+		let statement = `Loving `;
+		this.favSubjects.forEach(subject => {
+			statement = statement + `${subject}`;
+			if (subject !== this.favSubjects[this.favSubjects.length - 1]) {
+				statement = statement + `, `;
+			}
+		});
+		statement += `!`;
+		return statement;
+	}
+
+     PRAssignment(subject){
+       return `${this.name} has submitted a PR for ${subject}`
+     }
+     sprintChallenge(subject){
+       return `${this.name} has begun sprint challenge on ${subject}`
+     }
  }
+
+ const jimmy = new Student({
+   name: 'Jimmy',
+   age: 24,
+   location: 'Louisville',
+   previousBackground: 'delivery driver',
+   className: 'web45',
+   favSubjects: ['HTML', 'CSS'],
+ })
+
+ console.log(jimmy.listSubjects());
+ console.log(jimmy.PRAssignment('Arrays'));
+ console.log(jimmy.sprintChallenge('Objects'));
   
   /*
     TASK 6
@@ -128,9 +250,34 @@ class Airplane {
           + `standUp` a method that takes in a slack channel and returns `{name} announces to {channel}, @channel standy times!`
           + `debugsCode` a method that takes in a student object and a subject and returns `{name} debugs {student.name}'s code on {subject}`
   */
- class ProjectManager {
-     
+ class ProjectManager extends Instructor {
+     constructor(attributes){
+       super(attributes);
+       this.gradClassName = attributes.gradClassName;
+       this.favInstructor = attributes.favInstructor;
+     }
+     standUp(channel){
+       return `${this.name} announces to ${channel}, @channel standy times!`
+     }
+     debugsCode(student, subject){
+       return `${this.name} debugs ${student.name}'s code on ${subject}`
+     }
  }
+
+ const murray = new ProjectManager({
+   name: 'Murray',
+   age: 85,
+   location: 'Burlington',
+   specialty: 'Python',
+   favLanguage: 'JavaScript',
+   catchPhrase: 'There are no hierarchies in nature other than those imposed by hierarchical modes of human thought, but rather differences merely in function between and within living things',
+   gradClassName: 'Web42',
+   favInstructor: 'Brit Hemming',
+ })
+
+  console.log(murray.standUp('web45_help'));
+  console.log(murray.debugsCode(jimmy, 'Prototypes'));
+
   /*
     STRETCH PROBLEM (no tests!)
       - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
